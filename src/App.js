@@ -19,10 +19,19 @@ function App() {
     incorrect_answers={quest.incorrect_answers}
     question={quest.question} />)
 
+  function checkAnswers() {
+    console.log("check answers");
+  }
+
   return (
     <div className="App">
       <main>
-        {questionElements}
+        <div className='question-box'>
+          {questionElements}
+        </div>
+        <div className='check-box'>
+          <button className='check-answer' onClick={checkAnswers}>Check Answers</button>
+        </div>
       </main>
     </div>
   );

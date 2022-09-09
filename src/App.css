@@ -43,7 +43,7 @@ main {
 
 .answer-button {
     border: 0.8px solid #4D5B9E;
-    border-radius: 7.7px;
+    border-radius: 8px;
     
     cursor: pointer;
     font-family: 'Inter';
@@ -54,4 +54,21 @@ main {
     /* identical to box height */
     text-align: center;
     color: #293264;
+}
+
+.check-box {
+    padding-top: 20px;
+}
+
+.check-answer {
+    background: #4D5B9E;
+    border-radius: 8px;
+
+    font-family: 'Inter';
+
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+    padding: 5px 15px;
+    color: #F5F7FB;
 }

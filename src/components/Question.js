@@ -12,11 +12,12 @@ function Question(props) {
         text = text.replace(quotes, '"');
         return text.replace(regex, "'");
     }
+    
+    const cleanQuestion = cleanText(props.question);
 
     const answers = props.incorrect_answers.concat(props.correct_answer);
     const answerElements = answers.map(answer => <div className="answer-button">{cleanText(answer)}</div>);
 
-    const cleanQuestion = cleanText(props.question);
 
   return (
   <div className="question">
