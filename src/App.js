@@ -1,15 +1,28 @@
+import React, { useState } from 'react';
 import './App.css';
 import Question from "./components/Question";
 
 function App() {
+  const [questData, setQuestData] = useState([]);
+
+  React.useEffect(() => {
+    fetch("https://opentdb.com/api.php?amount=5&category=9&type=multiple")
+      .then(res => res.json())
+      .then(data => setQuestData(data.results));
+  }, []);
+
+  const questionElements = questData.map(quest => <Question 
+    key={quest.correct_answer}
+    category={quest.category}
+    difficulty={quest.difficulty}
+    correct_answer={quest.correct_answer}
+    incorrect_answers={quest.incorrect_answers}
+    question={quest.question} />)
+
   return (
     <div className="App">
       <main>
-        <Question />
-        <Question />
-        <Question />
-        <Question />
-        <Question />
+        {questionElements}
       </main>
     </div>
   );
