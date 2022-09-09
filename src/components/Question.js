@@ -2,7 +2,7 @@ import React from "react";
 import '../App.css';
 
 function Question(props) {
-    console.log(props);
+    // console.log(props);
 
     
     function cleanText(text) {

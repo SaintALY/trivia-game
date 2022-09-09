@@ -4,24 +4,44 @@ import Question from "./components/Question";
 
 function App() {
   const [questData, setQuestData] = useState([]);
+  const [questions, setQuestions] = useState(allNewQuestions());
 
   React.useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5&category=9&type=multiple")
       .then(res => res.json())
       .then(data => setQuestData(data.results));
+    setQuestions(allNewQuestions());
   }, []);
 
-  const questionElements = questData.map(quest => <Question 
-    key={quest.correct_answer}
-    category={quest.category}
-    difficulty={quest.difficulty}
-    correct_answer={quest.correct_answer}
-    incorrect_answers={quest.incorrect_answers}
-    question={quest.question} />)
+  function allNewQuestions() {
+    const questionArray = [];
+    for (let i = 0; i < questData.length; i++) {
+      questionArray.push({
+        key: i,
+        category: questData[i].category,
+        difficulty: questData[i].difficulty,
+        correct_answer: questData[i].correct_answer,
+        incorrect_answers: questData[i].incorrect_answers,
+        question: questData[i].question
+      });
+    }
+    return questionArray;
+  }
+
+  const allAnswers = questions.incorrect_answers.concat(questions.correct_answer);
 
   function checkAnswers() {
     console.log("check answers");
   }
+
+  const questionElements = questions.map(quest => <Question 
+    key={quest.key}
+    category={quest.category}
+    difficulty={quest.difficulty}
+    correct_answer={quest.correct_answer}
+    incorrect_answers={quest.incorrect_answers}
+    question={quest.question}
+    allAnswers={allAnswers} />)
 
   return (
     <div className="App">
