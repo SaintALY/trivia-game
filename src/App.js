@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Question from "./components/Question";
+import {nanoid} from "nanoid"
 
 function App() {
   const [questData, setQuestData] = useState([]);
@@ -17,31 +18,64 @@ function App() {
     const questionArray = [];
     for (let i = 0; i < questData.length; i++) {
       questionArray.push({
-        key: i,
+        id: nanoid(),
         category: questData[i].category,
         difficulty: questData[i].difficulty,
-        correct_answer: questData[i].correct_answer,
-        incorrect_answers: questData[i].incorrect_answers,
-        question: questData[i].question
+        question: questData[i].question,
+        answer_0: {id: 0, value: questData[i].incorrect_answers[0], correct: false, selected: false},
+        answer_1: {id: 1, value: questData[i].incorrect_answers[1], correct: false, selected: false},
+        answer_2: {id: 2, value: questData[i].incorrect_answers[2], correct: false, selected: false},
+        answer_3: {id: 3, value: questData[i].correct_answer, correct: true, selected: false},
+        answers: [{AId: 0, value: questData[i].incorrect_answers[0], correct: false, selected: false},
+                 {AId: 1, value: questData[i].incorrect_answers[1], correct: false, selected: false},
+                  {AId: 2, value: questData[i].incorrect_answers[2], correct: false, selected: false},
+                  {AId: 3, value: questData[i].correct_answer, correct: true, selected: false}]
       });
     }
     return questionArray;
   }
 
-  const allAnswers = questions.incorrect_answers.concat(questions.correct_answer);
-
-  function checkAnswers() {
+  function generateQuestions() {
     console.log("check answers");
+    setQuestions(allNewQuestions());
+  }
+
+  // TODO: FIX THIS
+  function markAnswer_0(id) { 
+    console.log("A0", id);
+    questions.map(question => {
+      if (question.id === id) {
+        setQuestions(prevQuestions => question.answer_0.selected = true);
+      }});
+  }
+
+  function markAnswer_1(id) {
+    console.log("A1", id);
+  }
+
+  function markAnswer_2(id) {
+    console.log("A2", id);
+  }
+
+  function markAnswer_3(id) {
+    console.log("A3", id);
   }
 
   const questionElements = questions.map(quest => <Question 
-    key={quest.key}
-    category={quest.category}
-    difficulty={quest.difficulty}
-    correct_answer={quest.correct_answer}
-    incorrect_answers={quest.incorrect_answers}
-    question={quest.question}
-    allAnswers={allAnswers} />)
+                                          key={quest.id}
+                                          category={quest.category}
+                                          difficulty={quest.difficulty}
+                                          answer_0={quest.answer_0}
+                                          answer_1={quest.answer_1}
+                                          answer_2={quest.answer_2}
+                                          answer_3={quest.answer_3}
+                                          question={quest.question}
+                                          answers={quest.answers}
+                                          markAnswer_0={() => markAnswer_0(quest.id)}
+                                          markAnswer_1={() => markAnswer_1(quest.id)}
+                                          markAnswer_2={() => markAnswer_2(quest.id)}
+                                          markAnswer_3={() => markAnswer_3(quest.id)}
+                                        />)
 
   return (
     <div className="App">
@@ -50,7 +84,7 @@ function App() {
           {questionElements}
         </div>
         <div className='check-box'>
-          <button className='check-answer' onClick={checkAnswers}>Check Answers</button>
+          <button className='check-answer' onClick={generateQuestions}>Genereate Question</button>
         </div>
       </main>
     </div>
@@ -58,18 +92,3 @@ function App() {
 }
 
 export default App;
-
-      // <header className="App-header">
-      //   <img src={logo} className="App-logo" alt="logo" />
-      //   <p>
-      //     Edit <code>src/App.js</code> and save to reload.
-      //   </p>
-      //   <a
-      //     className="App-link"
-      //     href="https://reactjs.org"
-      //     target="_blank"
-      //     rel="noopener noreferrer"
-      //   >
-      //     Learn React
-      //   </a>
-      // </header>
