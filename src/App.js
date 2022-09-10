@@ -6,6 +6,8 @@ import {nanoid} from "nanoid"
 function App() {
   const [questData, setQuestData] = useState([]);
   const [questions, setQuestions] = useState(allNewQuestions());
+  const [winner, setWinner] = useState(false);
+  const [checkWinner, setCheckWinner] = useState(false);
 
   React.useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5&category=9&type=multiple")
@@ -13,6 +15,24 @@ function App() {
       .then(data => setQuestData(data.results));
     setQuestions(allNewQuestions());
   }, []);
+
+  React.useEffect(() => {
+    console.log(questions);
+    setQuestions(questions.map(question => {
+      if (question.answer_0.selected === question.answer_0.correct || question.answer_1.selected === question.answer_1.correct || question.answer_2.selected === question.answer_2.correct || question.answer_3.selected === question.answer_3.correct) {
+        return {
+          ...question,
+          answered: true
+        }
+      } else {
+        return question;
+      }
+      }));
+    if (questions.every(question => question.answered === true)) {
+      setWinner(true);
+      console.log("winner");
+    }
+  }, [checkWinner]);
 
   function allNewQuestions() {
     const questionArray = [];
@@ -26,10 +46,11 @@ function App() {
         answer_1: {id: 1, value: questData[i].incorrect_answers[1], correct: false, selected: false},
         answer_2: {id: 2, value: questData[i].incorrect_answers[2], correct: false, selected: false},
         answer_3: {id: 3, value: questData[i].correct_answer, correct: true, selected: false},
-        answers: [{AId: 0, value: questData[i].incorrect_answers[0], correct: false, selected: false},
-                 {AId: 1, value: questData[i].incorrect_answers[1], correct: false, selected: false},
-                  {AId: 2, value: questData[i].incorrect_answers[2], correct: false, selected: false},
-                  {AId: 3, value: questData[i].correct_answer, correct: true, selected: false}]
+        answered: false
+        // answers: [{AId: 0, value: questData[i].incorrect_answers[0], correct: false, selected: false},
+        //          {AId: 1, value: questData[i].incorrect_answers[1], correct: false, selected: false},
+        //           {AId: 2, value: questData[i].incorrect_answers[2], correct: false, selected: false},
+        //           {AId: 3, value: questData[i].correct_answer, correct: true, selected: false}]
       });
     }
     return questionArray;
@@ -40,25 +61,92 @@ function App() {
     setQuestions(allNewQuestions());
   }
 
-  // TODO: FIX THIS
+  // TODO: re-write the hard coded answers to be dynamic and make use of the answers array
   function markAnswer_0(id) { 
-    console.log("A0", id);
-    questions.map(question => {
-      if (question.id === id) {
-        setQuestions(prevQuestions => question.answer_0.selected = true);
-      }});
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ? 
+        {...question, answer_0: {id: 0, value: question.answer_0.value, correct: question.answer_0.correct, selected: true}} : question;
+    }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_1: {id: 1, value: question.answer_1.value, correct: question.answer_1.correct, selected: false}} : question;
+      }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_2: {id: 2, value: question.answer_2.value, correct: question.answer_2.correct, selected: false}} : question;
+      }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_3: {id: 3, value: question.answer_3.value, correct: question.answer_3.correct, selected: false}} : question;
+      }));
   }
 
   function markAnswer_1(id) {
-    console.log("A1", id);
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ? 
+        {...question, answer_1: {id: 1, value: question.answer_1.value, correct: question.answer_1.correct, selected: true}} : question;
+    }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_0: {id: 0, value: question.answer_0.value, correct: question.answer_0.correct, selected: false}} : question;
+      }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_2: {id: 2, value: question.answer_2.value, correct: question.answer_2.correct, selected: false}} : question;
+      }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_3: {id: 3, value: question.answer_3.value, correct: question.answer_3.correct, selected: false}} : question;
+      }));
   }
 
   function markAnswer_2(id) {
-    console.log("A2", id);
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ? 
+        {...question, answer_2: {id: 2, value: question.answer_2.value, correct: question.answer_2.correct, selected: true}} : question;
+    }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_0: {id: 0, value: question.answer_0.value, correct: question.answer_0.correct, selected: false}} : question;
+      }
+    ));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_1: {id: 1, value: question.answer_1.value, correct: question.answer_1.correct, selected: false}} : question;
+      }
+    ));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_3: {id: 3, value: question.answer_3.value, correct: question.answer_3.correct, selected: false}} : question;
+      }
+    ));
   }
 
   function markAnswer_3(id) {
-    console.log("A3", id);
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ? 
+        {...question, answer_3: {id: 3, value: question.answer_3.value, correct: question.answer_3.correct, selected: true}} : question;
+    }));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_0: {id: 0, value: question.answer_0.value, correct: question.answer_0.correct, selected: false}} : question;
+      }
+    ));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_1: {id: 1, value: question.answer_1.value, correct: question.answer_1.correct, selected: false}} : question;
+      }
+    ));
+    setQuestions(oldQuestions => oldQuestions.map(question => {
+      return question.id === id ?
+        {...question, answer_2: {id: 2, value: question.answer_2.value, correct: question.answer_2.correct, selected: false}} : question;
+      }
+    ));
+  }
+
+  function checkAnswers() {
+    console.log("check answers");
+    setCheckWinner(!checkWinner);
   }
 
   const questionElements = questions.map(quest => <Question 
@@ -70,7 +158,8 @@ function App() {
                                           answer_2={quest.answer_2}
                                           answer_3={quest.answer_3}
                                           question={quest.question}
-                                          answers={quest.answers}
+                                          answered={quest.answered}
+                                          // answers={quest.answers}
                                           markAnswer_0={() => markAnswer_0(quest.id)}
                                           markAnswer_1={() => markAnswer_1(quest.id)}
                                           markAnswer_2={() => markAnswer_2(quest.id)}
@@ -85,6 +174,7 @@ function App() {
         </div>
         <div className='check-box'>
           <button className='check-answer' onClick={generateQuestions}>Genereate Question</button>
+          <button className='check-answer' onClick={checkAnswers}>Check Answers</button>
         </div>
       </main>
     </div>
