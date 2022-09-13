@@ -28,10 +28,6 @@ function App() {
         return question;
       }
       }));
-    if (questions.every(question => question.answered === true)) {
-      setWinner(true);
-      console.log("winner");
-    }
   }, [checkWinner]);
 
   function allNewQuestions() {
